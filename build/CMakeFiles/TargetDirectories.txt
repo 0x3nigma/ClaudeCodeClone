@@ -1,0 +1,3 @@
+/home/eigenstein/Documents/ClaudeCodeClone/build/CMakeFiles/main.dir
+/home/eigenstein/Documents/ClaudeCodeClone/build/CMakeFiles/edit_cache.dir
+/home/eigenstein/Documents/ClaudeCodeClone/build/CMakeFiles/rebuild_cache.dir
