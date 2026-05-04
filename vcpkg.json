@@ -1,0 +1,8 @@
+{
+  "name": "coding-agent",
+  "version": "1.0.0",
+  "dependencies": [
+    "cpr",
+    "nlohmann-json"
+  ]
+}
