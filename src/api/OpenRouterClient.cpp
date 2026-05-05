@@ -52,6 +52,18 @@ std::string OpenRouterClient::chat(const std::string& prompt){
     if (!result.contains("choices") || result["choices"].empty()) {
         throw std::runtime_error("Response is empty");
     }
-    return result.dump(2);
+
+    auto& message = result["choices"][0]["message"];
+    if(!message.contains("tool_calls") || message["tool_calls"].empty()){
+        return message["content"].get<std::string>();
+    }
+    else{
+        std::string args = message["tool_calls"][0]["function"]["arguments"];
+        json args_json = json::parse(args);
+        std::string file_path = args_json["file_path"].get<std::string>();
+        rt.setFilePath(file_path);
+        return rt.doTask();
+    }
+    return "";
 }
 

@@ -1,5 +1,10 @@
 #include "ReadTool.h"
 #include <nlohmann/json.hpp>
+#include <string>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <stdexcept>
 using json = nlohmann::json;
 
 json ReadTool::getToolSpec() const{
@@ -21,4 +26,15 @@ json ReadTool::getToolSpec() const{
         }}
     };
 }
-
+void ReadTool::setFilePath(const std::string& path){
+    file_path = path;
+}
+std::string ReadTool::doTask(){
+    std::ifstream file(ReadTool::file_path);
+    if(!file){
+        throw std::runtime_error("Couldnot open file");
+    }
+    std::ostringstream content;
+    content << file.rdbuf();
+    return content.str();
+}
