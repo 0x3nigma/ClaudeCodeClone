@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/main.dir/src/api/OpenRouterClient.cpp.o.d"
   "CMakeFiles/main.dir/src/main.cpp.o"
   "CMakeFiles/main.dir/src/main.cpp.o.d"
+  "CMakeFiles/main.dir/src/tools/ReadTool.cpp.o"
+  "CMakeFiles/main.dir/src/tools/ReadTool.cpp.o.d"
   "main"
   "main.pdb"
 )

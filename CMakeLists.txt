@@ -9,6 +9,7 @@ find_package(nlohmann_json CONFIG REQUIRED)
 add_executable(main
     src/main.cpp
     src/api/OpenRouterClient.cpp
+    src/tools/ReadTool.cpp
 )
 
 target_include_directories(main PRIVATE src)

@@ -4,7 +4,7 @@
 
 int main() {
     try {
-        OpenRouterClient client;
+        OpenRouterClient client{};
 
         std::cout << "Enter your prompt: ";
         std::string prompt;

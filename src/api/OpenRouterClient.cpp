@@ -1,4 +1,5 @@
 #include "OpenRouterClient.h"
+#include "../tools/ReadTool.h" 
 #include <cpr/cpr.h>
 #include <cstring>
 #include <iostream>
@@ -18,10 +19,18 @@ std::string OpenRouterClient::chat(const std::string& prompt){
     }
     std::string openrouterApi{openrouterApi_env};
     std::string baseUrl{"https://openrouter.ai/api/v1"};
+
+    //Getting the required tool specs;
+    ReadTool rt{};
+    json readToolSpec = rt.getToolSpec();
+
     json request_body{
         {"model", "openrouter/free"},
         {"messages", json::array({
             {{"role", "user"}, {"content", prompt}}
+        })},
+        {"tools", json::array({
+            readToolSpec
         })}
     };
     cpr::Response response{
@@ -43,6 +52,6 @@ std::string OpenRouterClient::chat(const std::string& prompt){
     if (!result.contains("choices") || result["choices"].empty()) {
         throw std::runtime_error("Response is empty");
     }
-    return result["choices"][0]["message"]["content"].get<std::string>();
+    return result.dump(2);
 }
 

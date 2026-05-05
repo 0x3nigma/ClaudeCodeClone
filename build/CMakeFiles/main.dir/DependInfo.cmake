@@ -10,6 +10,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/eigenstein/Documents/ClaudeCodeClone/src/api/OpenRouterClient.cpp" "CMakeFiles/main.dir/src/api/OpenRouterClient.cpp.o" "gcc" "CMakeFiles/main.dir/src/api/OpenRouterClient.cpp.o.d"
   "/home/eigenstein/Documents/ClaudeCodeClone/src/main.cpp" "CMakeFiles/main.dir/src/main.cpp.o" "gcc" "CMakeFiles/main.dir/src/main.cpp.o.d"
+  "/home/eigenstein/Documents/ClaudeCodeClone/src/tools/ReadTool.cpp" "CMakeFiles/main.dir/src/tools/ReadTool.cpp.o" "gcc" "CMakeFiles/main.dir/src/tools/ReadTool.cpp.o.d"
   )
 
 # Targets to which this target links.

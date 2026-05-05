@@ -177,6 +177,30 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/tools/ReadTool.o: src/tools/ReadTool.cpp.o
+.PHONY : src/tools/ReadTool.o
+
+# target to build an object file
+src/tools/ReadTool.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/tools/ReadTool.cpp.o
+.PHONY : src/tools/ReadTool.cpp.o
+
+src/tools/ReadTool.i: src/tools/ReadTool.cpp.i
+.PHONY : src/tools/ReadTool.i
+
+# target to preprocess a source file
+src/tools/ReadTool.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/tools/ReadTool.cpp.i
+.PHONY : src/tools/ReadTool.cpp.i
+
+src/tools/ReadTool.s: src/tools/ReadTool.cpp.s
+.PHONY : src/tools/ReadTool.s
+
+# target to generate assembly for a file
+src/tools/ReadTool.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/tools/ReadTool.cpp.s
+.PHONY : src/tools/ReadTool.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -192,6 +216,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/tools/ReadTool.o"
+	@echo "... src/tools/ReadTool.i"
+	@echo "... src/tools/ReadTool.s"
 .PHONY : help
 
 
