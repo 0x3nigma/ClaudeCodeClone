@@ -4,9 +4,8 @@
 #include <string>
 
 class ReadTool: public Tool{
-    std::string file_path;
 public:
     nlohmann::json getToolSpec() const override;
-    std::string doTask() override;
-    void setFilePath(const std::string& path);
+    std::string doTask(const nlohmann::json& args) override;
+    std::string getName() override;
 };

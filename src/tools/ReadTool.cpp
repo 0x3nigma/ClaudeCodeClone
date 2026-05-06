@@ -26,13 +26,14 @@ json ReadTool::getToolSpec() const{
         }}
     };
 }
-void ReadTool::setFilePath(const std::string& path){
-    file_path = path;
+std::string ReadTool::getName(){
+    return "Read";
 }
-std::string ReadTool::doTask(){
-    std::ifstream file(ReadTool::file_path);
+std::string ReadTool::doTask(const json& args){
+    std::string file_path = args.at("file_path").get<std::string>();
+    std::ifstream file(file_path);
     if(!file){
-        throw std::runtime_error("Couldnot open file");
+        throw std::runtime_error("Couldnot open file" + file_path);
     }
     std::ostringstream content;
     content << file.rdbuf();

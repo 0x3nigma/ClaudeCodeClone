@@ -6,7 +6,8 @@ using json = nlohmann::json;
 class Tool{
 public:
     virtual nlohmann::json getToolSpec() const = 0;
-    virtual std::string doTask() = 0;
+    virtual std::string doTask(const json& args) = 0;
+    virtual std::string getName() = 0;
     virtual ~Tool() = default;
 };
 
