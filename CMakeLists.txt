@@ -6,11 +6,11 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(cpr CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 
-add_executable(main
-    src/main.cpp
-    src/api/OpenRouterClient.cpp
-    src/tools/ReadTool.cpp
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
+    src/*.cpp
 )
+
+add_executable(main ${SOURCES})
 
 target_include_directories(main PRIVATE src)
 

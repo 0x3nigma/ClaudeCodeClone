@@ -1,5 +1,7 @@
 #include "OpenRouterClient.h"
+#include "../tools/WriteTool.h"
 #include "../tools/ReadTool.h" 
+#include "../tools/BashTool.h"
 #include <cpr/cpr.h>
 #include <cstring>
 #include <iostream>
@@ -28,7 +30,9 @@ std::string OpenRouterClient::chat(const std::string& prompt){
             {"model", "openrouter/free"},
             {"messages", messages},
             {"tools", json::array({
-                ReadTool{}.getToolSpec()
+                WriteTool{}.getToolSpec(),
+                ReadTool{}.getToolSpec(),
+                BashTool{}.getToolSpec()
             })}
         };
             cpr::Response response = cpr::Post(
@@ -67,6 +71,26 @@ std::string OpenRouterClient::chat(const std::string& prompt){
                     ReadTool rt{};
                     json args = json::parse(func["arguments"].get<std::string>());
                     std::string result = rt.doTask(args);
+                    messages.push_back({
+                        {"role", "tool"},
+                        {"tool_call_id", tool.at("id")},
+                        {"content", result}
+                    });
+                }
+                if(func["name"].get<std::string>() == "Write"){
+                    WriteTool wt{};
+                    json args = json::parse(func["arguments"].get<std::string>());
+                    std::string result = wt.doTask(args);
+                    messages.push_back({
+                        {"role", "tool"},
+                        {"tool_call_id", tool.at("id")},
+                        {"content", result}
+                    });
+                }
+                if(func["name"].get<std::string>() == "Bash"){
+                    BashTool bt{};
+                    json args = json::parse(func["arguments"].get<std::string>());
+                    std::string result = bt.doTask(args);
                     messages.push_back({
                         {"role", "tool"},
                         {"tool_call_id", tool.at("id")},
