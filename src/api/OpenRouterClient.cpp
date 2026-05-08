@@ -9,11 +9,18 @@
 #include <stdexcept>
 #include <string>
 #include <cstdlib>
+#include <unordered_map>
+#include "../tools/toolSpec.h"
+
+#define MAX_ITER 10
 
 
 using json = nlohmann::json;
 
-std::string OpenRouterClient::chat(const std::string& prompt){
+OpenRouterClient::OpenRouterClient(): messages(json::array()){};
+
+std::string OpenRouterClient::chat(const std::string& prompt,
+                                   const std::unordered_map<std::string, std::unique_ptr<Tool>>& registry){
     // Getting the api keys :
     const char* openrouterApi_env{std::getenv("OPENROUTER_API_KEY")};
     if(!openrouterApi_env || strlen(openrouterApi_env) == 0){
@@ -22,18 +29,23 @@ std::string OpenRouterClient::chat(const std::string& prompt){
     std::string openrouterApi{openrouterApi_env};
     std::string baseUrl{"https://openrouter.ai/api/v1"};
 
-    json messages = json::array();
     messages.push_back({{"role", "user"}, {"content", prompt}});
 
+    auto tools = json::array();
+    for(const auto& [name, tool_ptr] : registry){
+        tools.push_back(tool_ptr->getToolSpec());
+    }
+
+    int count{};
+
     while(1){
+        count++;
+        if(count > MAX_ITER) break;
+
         json request_body = {
             {"model", "openrouter/free"},
             {"messages", messages},
-            {"tools", json::array({
-                WriteTool{}.getToolSpec(),
-                ReadTool{}.getToolSpec(),
-                BashTool{}.getToolSpec()
-            })}
+            {"tools", tools}
         };
             cpr::Response response = cpr::Post(
             cpr::Url{baseUrl + "/chat/completions"},
@@ -65,39 +77,21 @@ std::string OpenRouterClient::chat(const std::string& prompt){
 
         else{
             auto tools_called = message["tool_calls"];
-            for(const auto& tool : tools_called){
-                auto func = tool["function"];
-                if(func["name"].get<std::string>() == "Read"){
-                    ReadTool rt{};
-                    json args = json::parse(func["arguments"].get<std::string>());
-                    std::string result = rt.doTask(args);
+            for(const auto& tool_info : tools_called){
+                auto func_name = tool_info["function"]["name"].get<std::string>();
+                if(registry.find(func_name) != registry.end()){
+                    auto& tool_ptr = registry.at(func_name);
+                    json args = json::parse(tool_info["function"]["arguments"].get<std::string>());
+                    std::string result = tool_ptr->doTask(args);
                     messages.push_back({
                         {"role", "tool"},
-                        {"tool_call_id", tool.at("id")},
-                        {"content", result}
-                    });
-                }
-                if(func["name"].get<std::string>() == "Write"){
-                    WriteTool wt{};
-                    json args = json::parse(func["arguments"].get<std::string>());
-                    std::string result = wt.doTask(args);
-                    messages.push_back({
-                        {"role", "tool"},
-                        {"tool_call_id", tool.at("id")},
-                        {"content", result}
-                    });
-                }
-                if(func["name"].get<std::string>() == "Bash"){
-                    BashTool bt{};
-                    json args = json::parse(func["arguments"].get<std::string>());
-                    std::string result = bt.doTask(args);
-                    messages.push_back({
-                        {"role", "tool"},
-                        {"tool_call_id", tool.at("id")},
+                        {"tool_call_id", tool_info.at("id")},
                         {"content", result}
                     });
                 }
             }
         }
     }
+    throw std::runtime_error("Max Iterations exceeded.");
 }
+
